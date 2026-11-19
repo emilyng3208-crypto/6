@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>七宗罪 × 七美德日常测试</title>
+<style>
+/* Layout: one narrow column; the 14-spoke wheel is the one memorable element. One sans family, two weights (400, 600). Vermilion = sins, azure = virtues, gold = structure only. */
+:root{
+  color-scheme: dark;
+  --bg:#0d1424;
+  --panel:#121b2e;
+  --raised:#182440;
+  --rule:#24314d;
+  --rule-2:#33436a;
+  --ink:#ece6d6;
+  --ink-2:#aab3c5;
+  --ink-3:#8590a6;
+  --gold:#d4ae5a;
+  --gold-2:#b8913f;
+  --sin:#e66767;
+  --virtue:#3987e5;
+  --prev:#8590a6;
+  --sans:system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;font-weight:400;line-height:1.75;}
+main{max-width:640px;margin:0 auto;padding:32px 20px 72px;}
+[hidden]{display:none !important}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.35;text-wrap:balance}
+b,strong{font-weight:600}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+/* ---------- start ---------- */
+.title{font-size:clamp(40px,12vw,56px);line-height:1.12;letter-spacing:.02em;margin-top:8px}
+.title .line{display:block}
+.title .x{color:var(--ink-3);margin:0 .12em}
+.lead{margin-top:16px;font-size:18px;color:var(--ink-2);max-width:32em}
+.wheel-hero{margin:28px 0 0;padding:0}
+.wheel-hero figcaption{font-size:14px;color:var(--ink-3);margin-top:6px;text-align:center}
+.meta{margin-top:28px;padding-top:20px;border-top:1px solid var(--rule);color:var(--ink-2)}
+.send-note{margin-top:12px;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;font-size:15px}
+.h-small{font-size:19px;margin-top:28px}
+.rules{margin:10px 0 0;padding:0;list-style:none}
+.rules li{position:relative;padding-left:20px;margin-top:8px}
+.rules li::before{content:"";position:absolute;left:2px;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--gold-2)}
+.field{margin-top:28px}
+.field label{display:block;font-size:14px;color:var(--ink-2);margin-bottom:6px}
+.field input{width:100%;max-width:320px;background:var(--panel);border:1px solid var(--rule-2);border-radius:8px;padding:11px 12px;font-size:16px}
+.field input::placeholder{color:var(--ink-3)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{appearance:none;border:1px solid var(--rule-2);background:var(--raised);border-radius:999px;padding:12px 22px;font-size:16px;cursor:pointer;line-height:1.3}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#1a1405;font-weight:600}
+.btn.primary:hover{background:#dfba68}
+.btn.text{background:none;border:none;padding:10px 4px;color:var(--ink-2)}
+.btn.text:hover{color:var(--ink)}
+.btn.small{padding:8px 16px;font-size:14px}
+.btn.danger-armed{border-color:var(--sin)}
+.btn[disabled]{opacity:.55;cursor:default}
+.store-note{margin-top:14px;font-size:14px;color:var(--ink-3)}
+
+/* ---------- about ---------- */
+details.about{margin-top:44px;border-top:1px solid var(--rule);padding-top:14px}
+details.about>summary,details.more>summary{cursor:pointer;color:var(--ink-2);list-style:none;padding:6px 0}
+details.about>summary::-webkit-details-marker,details.more>summary::-webkit-details-marker{display:none}
+details.about>summary::before,details.more>summary::before{content:"+";display:inline-block;width:1.2em;color:var(--gold)}
+details[open].about>summary::before,details[open].more>summary::before{content:"−"}
+.about-body h3{font-size:17px;margin-top:22px}
+.about-body p{color:var(--ink-2);font-size:15px;margin-top:8px}
+.refs{list-style:none;padding:0;margin:8px 0 0}
+.refs li{font-size:13px;line-height:1.6;color:var(--ink-3);padding-left:1.6em;text-indent:-1.6em;margin-top:6px}
+
+/* ---------- quiz ---------- */
+.q-top{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2)}
+.bar{height:4px;background:var(--rule);border-radius:2px;margin-top:10px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:var(--gold);border-radius:2px;transition:width .25s ease}
+.q-card{margin-top:30px;min-height:170px}
+.q-tag{display:inline-block;font-size:13px;color:var(--gold);border:1px solid var(--gold-2);border-radius:999px;padding:1px 12px;margin-bottom:14px}
+.q-text{font-size:clamp(19px,5.2vw,22px);line-height:1.65;color:var(--ink)}
+.q-text+.q-text{margin-top:6px}
+.q-react{outline:none;font-weight:400}
+.q-ask{margin-top:14px;color:var(--ink-2);font-size:16px}
+.opts{display:grid;gap:10px;margin-top:26px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--rule-2);border-radius:12px;padding:13px 16px;cursor:pointer;font-size:17px;min-height:54px;transition:border-color .15s,background-color .15s}
+.opt:hover{border-color:var(--ink-3)}
+.opt .n{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--rule-2);display:grid;place-items:center;font-size:14px;color:var(--ink-2)}
+.opt[aria-pressed="true"]{border-color:var(--gold);background:#1e2a45}
+.opt[aria-pressed="true"] .n{background:var(--gold);border-color:var(--gold);color:#1a1405}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+.kbd-hint{font-size:13px;color:var(--ink-3)}
+@media (hover:none){.kbd-hint{display:none}}
+
+/* ---------- result ---------- */
+.r-head h1{font-size:clamp(30px,9vw,40px)}
+.r-date{color:var(--ink-2);margin-top:6px}
+.highlights{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:24px;background:var(--rule);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.hl{background:var(--panel);padding:14px 16px}
+.hl .k{font-size:14px;color:var(--ink-2)}
+.hl .v{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;font-size:22px;font-weight:600}
+.r-sec{margin-top:40px}
+.r-sec>h2{font-size:22px}
+.note{font-size:14px;color:var(--ink-3);margin-top:6px}
+.quality{list-style:none;padding:0;margin:12px 0 0}
+.quality li{display:flex;gap:10px;margin-top:8px;align-items:flex-start}
+.quality .ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;margin-top:3px;border:1px solid var(--rule-2);color:var(--ink-2)}
+.quality li.warn .ic{border-color:var(--gold);color:var(--gold)}
+.quality details{margin-top:4px}
+.quality details summary{cursor:pointer;color:var(--ink-3);font-size:14px}
+.quality .pairlist{font-size:14px;color:var(--ink-2);margin:6px 0 0;padding-left:1.1em}
+.chart-panel{background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:14px 10px 16px;margin-top:14px;position:relative}
+.cmp{display:flex;align-items:center;gap:10px;margin:2px 6px 0;font-size:14px;color:var(--ink-2)}
+.cmp select{background:var(--raised);border:1px solid var(--rule-2);border-radius:8px;padding:6px 8px;font-size:14px;max-width:100%}
+.wheel{position:relative}
+.wheel svg{display:block;width:100%;height:auto;max-width:460px;margin:0 auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;list-style:none;padding:0;margin:6px 0 0;font-size:14px;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:7px}
+.sw-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.sw-line{width:18px;height:0;border-top:2px solid var(--prev);display:inline-block;flex:none}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.dot.sin,.sw-dot.sin{background:var(--sin)}
+.dot.virtue,.sw-dot.virtue{background:var(--virtue)}
+.tip-box{position:absolute;pointer-events:none;background:#0a1020;border:1px solid var(--rule-2);border-radius:8px;padding:7px 10px;font-size:13px;line-height:1.45;white-space:nowrap;z-index:5;transform:translate(-50%,calc(-100% - 12px))}
+.tip-box .tv{font-size:16px;font-weight:600;color:var(--ink)}
+.tip-box .tn{color:var(--ink-2)}
+.ring{fill:none;stroke:var(--rule);stroke-width:1}
+.spoke{stroke:var(--rule);stroke-width:1}
+.ringlab{fill:var(--ink-3);font-size:10px;text-anchor:middle;paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round;font-family:var(--sans)}
+.hero .ringlab{stroke:var(--bg)}
+.lab-name{fill:var(--ink-2);font-size:13px;font-family:var(--sans)}
+.lab-score{fill:var(--ink);font-size:15px;font-weight:600;font-family:var(--sans);font-variant-numeric:tabular-nums}
+.lab{cursor:pointer}
+.hero .lab{cursor:default}
+.lab:hover .lab-name{fill:var(--ink)}
+.area-sin{fill:rgba(230,103,103,.15);stroke:var(--sin);stroke-width:2;stroke-linejoin:round}
+.area-virtue{fill:rgba(57,135,229,.15);stroke:var(--virtue);stroke-width:2;stroke-linejoin:round}
+.area-prev{fill:none;stroke:var(--prev);stroke-width:1.5;stroke-linejoin:round;opacity:.9}
+.pt-sin{fill:var(--sin);stroke:var(--panel);stroke-width:2}
+.pt-virtue{fill:var(--virtue);stroke:var(--panel);stroke-width:2}
+.hit{fill:transparent;cursor:pointer}
+.hit:focus{outline:none}
+.hit:focus-visible{stroke:var(--gold);stroke-width:2}
+.grow{transform-box:view-box;transform-origin:0px 0px;animation:grow .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes grow{from{transform:scale(.12);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.grow{animation:none}.bar span{transition:none}.opt{transition:none}}
+
+table.scores{width:100%;border-collapse:collapse;margin-top:12px;font-variant-numeric:tabular-nums}
+table.scores th{font-weight:400;font-size:13px;color:var(--ink-3);text-align:left;padding:6px;border-bottom:1px solid var(--rule)}
+table.scores td{padding:9px 6px;border-bottom:1px solid var(--rule);vertical-align:baseline}
+table.scores td.n{white-space:nowrap}
+table.scores td.n .dot{margin-right:6px}
+table.scores td.s{font-weight:600;white-space:nowrap}
+table.scores td.s small{font-weight:400;color:var(--ink-3);margin-left:6px;font-size:12px}
+table.scores tr.avg td{color:var(--ink-2);border-bottom:none}
+table.scores caption{caption-side:bottom;text-align:left;font-size:13px;color:var(--ink-3);padding-top:8px}
+.copy-row{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.copy-msg{font-size:14px;color:var(--ink-2)}
+.copy-fallback{width:100%;min-height:150px;margin-top:10px;background:var(--panel);color:var(--ink);border:1px solid var(--rule-2);border-radius:8px;padding:10px;font-size:14px}
+
+.pair{border-top:1px solid var(--rule);padding:22px 0 6px;margin-top:18px;scroll-margin-top:16px}
+.pair:first-of-type{margin-top:12px}
+.pair.flash{animation:flash 1.2s ease}
+@keyframes flash{0%{background:rgba(212,174,90,.12)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.pair.flash{animation:none}}
+.pair-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.pair-head h3{font-size:19px}
+.pair-scores{font-size:15px;color:var(--ink-2);display:flex;gap:14px;align-items:center}
+.pair-scores span{display:inline-flex;align-items:center;gap:6px}
+.pair-scores b{color:var(--ink);font-variant-numeric:tabular-nums}
+.combo{margin-top:12px;padding:12px 14px;border-left:2px solid var(--gold-2);background:rgba(212,174,90,.06);border-radius:0 8px 8px 0}
+.combo-name{font-size:18px;font-weight:600}
+.combo p+p{margin-top:4px;color:var(--ink-2)}
+.dim-entry{margin-top:18px}
+.dim-entry h4{font-size:17px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dim-entry h4 b{font-variant-numeric:tabular-nums}
+.band{font-size:13px;font-weight:400;color:var(--ink-2);border:1px solid var(--rule-2);border-radius:999px;padding:0 9px}
+.delta{font-size:13px;font-weight:400;color:var(--ink-3)}
+.dim-entry .desc{margin-top:6px}
+.dim-entry .tip{margin-top:8px;color:var(--ink-2)}
+.dim-entry .concept{margin-top:8px;font-size:14px;color:var(--ink-3)}
+.dim-entry .basis{margin-top:2px;font-size:13px;color:var(--ink-3)}
+
+details.more{margin-top:10px}
+.ans-group{margin-top:18px}
+.ans-group h4{font-size:16px;display:flex;align-items:center;gap:8px}
+.ans-list{list-style:none;padding:0;margin:6px 0 0}
+.ans-list li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.ans-list .aq{color:var(--ink)}
+.ans-list .aa{color:var(--ink-2);margin-top:2px}
+.ans-list .aa span{color:var(--ink)}
+.ans-list .as{font-size:13px;color:var(--ink-3);margin-top:2px}
+
+.hist{list-style:none;padding:0;margin:12px 0 0}
+.hist li{padding:12px 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.hist .hd{font-weight:600}
+.hist .hn{color:var(--ink-2);margin-left:8px}
+.hist .cur{font-size:12px;color:var(--gold);border:1px solid var(--gold-2);border-radius:999px;padding:0 8px;margin-left:8px}
+.hist .hs{font-size:14px;color:var(--ink-3)}
+.hist .ha{display:flex;gap:8px}
+.empty{color:var(--ink-3);margin-top:10px}
+
+</style>
+</head>
+<body>
+<main>
+<noscript><p>这个测试需要开启 JavaScript 才能使用。</p></noscript>
+
+<!-- ============ START ============ -->
+<section id="v-start" class="view">
+  <h1 class="title"><span class="line">七宗罪<span class="x" aria-hidden="true">×</span></span><span class="line">七美德</span></h1>
+  <p class="lead">用 74 个日常场景，看欲望、冲动、克制和善意在你身上各有多少。</p>
+  <figure class="wheel-hero">
+    <div class="wheel hero" id="wheel-start"></div>
+    <figcaption>左边七宗罪，右边七美德，同一高度的两项是一对。做完测试后，这个轮会按你的答案填满。</figcaption>
+  </figure>
+  <p class="meta">74 题，约 10 分钟。</p>
+  <p class="send-note">结果只保存在你自己的浏览器里，不会上传。别人看不到你的结果，你也看不到别人的。</p>
+  <h2 class="h-small">作答前</h2>
+  <ul class="rules">
+    <li>按最近一个月的真实情况选，不是按你希望自己是怎样。</li>
+    <li>没遇过的情况，按你最可能的反应选。</li>
+    <li>每题只看一件事：题目里那个反应像不像你。</li>
+    <li>不用想太久，第一反应通常最准。</li>
+  </ul>
+  <div class="field">
+    <label for="nick">昵称（可选，用来区分这部设备上的记录）</label>
+    <input id="nick" type="text" maxlength="20" autocomplete="off" placeholder="可以不填">
+  </div>
+  <div class="actions">
+    <button class="btn primary" id="btn-start" type="button">开始测试</button>
+    <button class="btn" id="btn-resume" type="button" hidden>继续上次的作答</button>
+    <button class="btn" id="btn-last" type="button" hidden>查看最近一次结果</button>
+  </div>
+  <p class="store-note" id="store-note" hidden>这个浏览器无法保存记录：关闭页面后，进度和结果都会消失。</p>
+  <div class="about-slot"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="v-quiz" class="view" hidden>
+  <div class="q-top"><span id="q-count"></span><span id="q-eta"></span></div>
+  <div class="bar" id="q-bar-wrap" role="progressbar" aria-label="作答进度" aria-valuemin="0" aria-valuemax="74" aria-valuenow="0"><span id="q-bar"></span></div>
+  <article class="q-card">
+    <p class="q-tag" id="q-tag" hidden>过去一个月</p>
+    <p class="q-text" id="q-sit"></p>
+    <h2 class="q-text q-react" id="q-react" tabindex="-1"></h2>
+    <p class="q-ask" id="q-ask" hidden>这种情况发生过几次？</p>
+  </article>
+  <div class="opts" id="q-opts" role="group" aria-labelledby="q-react"></div>
+  <div class="q-foot">
+    <button class="btn text" id="btn-prev" type="button">上一题</button>
+    <span class="kbd-hint">也可以按键盘 1–5 作答</span>
+  </div>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section id="v-result" class="view" hidden>
+  <header class="r-head">
+    <h1 id="r-title">你的结果</h1>
+    <p class="r-date" id="r-date"></p>
+  </header>
+  <div class="highlights" id="r-high"></div>
+
+  <section class="r-sec">
+    <h2>作答质量</h2>
+    <ul class="quality" id="r-quality"></ul>
+  </section>
+
+  <section class="r-sec">
+    <h2>14 维轮廓</h2>
+    <p class="note">越往外，表示题目描述越像。分数是和题目两端比，不是和别人比。点一下名称可以跳到它的解读。</p>
+    <div class="chart-panel">
+      <div class="cmp" id="r-cmp-wrap" hidden><label for="r-cmp">对比</label><select id="r-cmp"></select></div>
+      <div class="wheel" id="wheel-result"></div>
+      <ul class="legend" id="r-legend"></ul>
+    </div>
+  </section>
+
+  <section class="r-sec">
+    <h2>分数一览</h2>
+    <table class="scores" id="r-table"></table>
+    <div class="copy-row"><button class="btn small" id="btn-copy" type="button">复制分数（文字版）</button><span class="copy-msg" id="copy-msg" role="status"></span></div>
+    <textarea class="copy-fallback" id="copy-fallback" readonly hidden aria-label="分数文字，可手动复制"></textarea>
+  </section>
+
+  <section class="r-sec">
+    <h2>七对罪与德</h2>
+    <p class="note">每一对先看组合，再分别看两项。组合的分法：两项都在 4–6 分之间算「两边都中等」，其他情况以 5 分为界分高低。</p>
+    <div id="r-pairs"></div>
+  </section>
+
+  <section class="r-sec">
+    <h2>每一题和答案</h2>
+    <p class="note">每一题下面写着它对应的心理学量表和面向。</p>
+    <details class="more"><summary>展开 74 题</summary><div id="r-answers"></div></details>
+  </section>
+
+  <section class="r-sec" id="r-hist-sec">
+    <h2>你的历史记录</h2>
+    <p class="note">只保存在这部设备的这个浏览器里，最多 30 次，别人看不到。如果几个人共用同一部手机，记录会存在一起，可以按「删除」清掉。</p>
+    <div id="r-history"></div>
+  </section>
+
+  <div class="actions" id="r-actions-self">
+    <button class="btn primary" id="btn-again" type="button">再测一次</button>
+    <button class="btn" id="btn-home" type="button">回到首页</button>
+  </div>
+  <div class="about-slot"></div>
+</section>
+
+</main>
+
+<template id="tpl-about">
+<details class="about">
+  <summary>这个测试是怎样设计的</summary>
+  <div class="about-body">
+    <h3>题目的心理学依据</h3>
+    <p>每一项都对应已经发表的心理学量表或理论，每一题再对应其中一个具体面向。例如「暴怒」的 5 题分别来自攻击性问卷的言语攻击和愤怒、愤怒反刍量表，以及人际冒犯动机量表的报复动机。每一题的出处写在结果页「每一题和答案」里。</p>
+    <p>和原量表不同的地方是写法：原量表多数是「我是一个容易生气的人」这类笼统的句子，这里改写成具体的日常场景。研究发现，加入具体情境的人格题目，比笼统的题目更能预测一个人的真实表现（Shaffer &amp; Postlethwaite, 2012）。另有 12 题问「过去一个月发生过几次」，按实际行为的次数来测特质，来自 Buss &amp; Craik（1983）的行为频率法。</p>
+    <p>还没有做到的：正式量表都用大量真实数据检验过信度和常模，这个测试还没有。题目全部是原创改写，没有照搬原量表的句子。</p>
+    <h3>减少美化</h3>
+    <p>同一项的题分散排列；4 题「几乎没人做得到」的题用来检查理想化作答，思路来自社会赞许性量表（Crowne &amp; Marlowe, 1960；Paulhus, 1991）；6 对正反题检查前后矛盾；平均每题少于 2 秒会提示作答太快（Huang 等, 2012）。</p>
+    <h3>怎样计分</h3>
+    <p>每项 5 题，每题 1–5 分。分数＝（5 题总和 − 5）÷ 2，范围 0–10，每 0.5 分一级。罪和德分开计，不互相抵消，所以可以同时「没耐心」又「不暴怒」。0–3 分为低，3.5–6 分为中，6.5–10 分为高。</p>
+    <h3>分数怎样看</h3>
+    <p>分数是和题目的两端比：0 表示 5 题都选了最低一档，10 表示 5 题都选了最高一档。这里没有和其他人比较，所以 7 分不代表「比 70% 的人高」。分数会受最近的压力、睡眠和环境影响。这不是诊断，也不是道德评价。</p>
+    <h3>结果会给谁看</h3>
+    <p>结果只保存在作答者自己的浏览器里，不会上传。别人看不到你的结果，你也看不到别人的。换了手机或浏览器，之前的记录不会跟着过去。</p>
+    <h3>参考文献</h3>
+    <ul class="refs">
+      <li>Ashton, M. C., &amp; Lee, K. (2009). The HEXACO–60: A short measure of the major dimensions of personality. <i>Journal of Personality Assessment, 91</i>(4), 340–345.</li>
+      <li>Baumeister, R. F., &amp; Tierney, J. (2011). <i>Willpower: Rediscovering the greatest human strength.</i> Penguin Press.</li>
+      <li>Buss, A. H., &amp; Perry, M. (1992). The Aggression Questionnaire. <i>Journal of Personality and Social Psychology, 63</i>(3), 452–459.</li>
+      <li>Buss, D. M., &amp; Craik, K. H. (1983). The act frequency approach to personality. <i>Psychological Review, 90</i>(2), 105–126.</li>
+      <li>Campbell, W. K., Bonacci, A. M., Shelton, J., Exline, J. J., &amp; Bushman, B. J. (2004). Psychological entitlement: Interpersonal consequences and validation of a self-report measure. <i>Journal of Personality Assessment, 83</i>(1), 29–45.</li>
+      <li>Crowne, D. P., &amp; Marlowe, D. (1960). A new scale of social desirability independent of psychopathology. <i>Journal of Consulting Psychology, 24</i>(4), 349–354.</li>
+      <li>Davis, M. H. (1983). Measuring individual differences in empathy: Evidence for a multidimensional approach. <i>Journal of Personality and Social Psychology, 44</i>(1), 113–126.</li>
+      <li>DeYoung, C. G., Quilty, L. C., &amp; Peterson, J. B. (2007). Between facets and domains: 10 aspects of the Big Five. <i>Journal of Personality and Social Psychology, 93</i>(5), 880–896.</li>
+      <li>Duckworth, A. (2016). <i>Grit: The power of passion and perseverance.</i> Scribner.</li>
+      <li>Duckworth, A. L., Peterson, C., Matthews, M. D., &amp; Kelly, D. R. (2007). Grit: Perseverance and passion for long-term goals. <i>Journal of Personality and Social Psychology, 92</i>(6), 1087–1101.</li>
+      <li>Gable, S. L., Reis, H. T., Impett, E. A., &amp; Asher, E. R. (2004). What do you do when things go right? The intrapersonal and interpersonal benefits of sharing positive events. <i>Journal of Personality and Social Psychology, 87</i>(2), 228–245.</li>
+      <li>Huang, J. L., Curran, P. G., Keeney, J., Poposki, E. M., &amp; DeShon, R. P. (2012). Detecting and deterring insufficient effort responding to surveys. <i>Journal of Business and Psychology, 27</i>(1), 99–114.</li>
+      <li>Lange, J., &amp; Crusius, J. (2015). Dispositional envy revisited: Unraveling the motivational dynamics of benign and malicious envy. <i>Personality and Social Psychology Bulletin, 41</i>(2), 284–294.</li>
+      <li>Lay, C. H. (1986). At last, my research article on procrastination. <i>Journal of Research in Personality, 20</i>(4), 474–495.</li>
+      <li>Leary, M. R., Diebels, K. J., Davisson, E. K., et al. (2017). Cognitive and interpersonal features of intellectual humility. <i>Personality and Social Psychology Bulletin, 43</i>(6), 793–813.</li>
+      <li>Lee, K., &amp; Ashton, M. C. (2012). <i>The H factor of personality.</i> Wilfrid Laurier University Press.</li>
+      <li>McCullough, M. E., Rachal, K. C., Sandage, S. J., Worthington, E. L., Brown, S. W., &amp; Hight, T. L. (1998). Interpersonal forgiving in close relationships: II. Theoretical elaboration and measurement. <i>Journal of Personality and Social Psychology, 75</i>(6), 1586–1603.</li>
+      <li>Miller, R. S. (1997). Inattentive and contented: Relationship commitment and attention to alternatives. <i>Journal of Personality and Social Psychology, 73</i>(4), 758–766.</li>
+      <li>Mischel, W. (2014). <i>The marshmallow test: Mastering self-control.</i> Little, Brown.</li>
+      <li>Niemiec, R. M. (2019). Finding the golden mean: The overuse, underuse, and optimal use of character strengths. <i>Counselling Psychology Quarterly, 32</i>(3–4), 453–471.</li>
+      <li>Paulhus, D. L. (1991). Measurement and control of response bias. In J. P. Robinson, P. R. Shaver, &amp; L. S. Wrightsman (Eds.), <i>Measures of personality and social psychological attitudes</i> (pp. 17–59). Academic Press.</li>
+      <li>Penke, L., &amp; Asendorpf, J. B. (2008). Beyond global sociosexual orientations: A more differentiated look at sociosexuality and its effects on courtship and romantic relationships. <i>Journal of Personality and Social Psychology, 95</i>(5), 1113–1135.</li>
+      <li>Peterson, C., &amp; Seligman, M. E. P. (2004). <i>Character strengths and virtues: A handbook and classification.</i> Oxford University Press.</li>
+      <li>Raskin, R., &amp; Terry, H. (1988). A principal-components analysis of the Narcissistic Personality Inventory and further evidence of its construct validity. <i>Journal of Personality and Social Psychology, 54</i>(5), 890–902.</li>
+      <li>Richins, M. L., &amp; Dawson, S. (1992). A consumer values orientation for materialism and its measurement: Scale development and validation. <i>Journal of Consumer Research, 19</i>(3), 303–316.</li>
+      <li>Rusbult, C. E., Martz, J. M., &amp; Agnew, C. R. (1998). The Investment Model Scale: Measuring commitment level, satisfaction level, quality of alternatives, and investment size. <i>Personal Relationships, 5</i>(4), 357–387.</li>
+      <li>Rushton, J. P., Chrisjohn, R. D., &amp; Fekken, G. C. (1981). The altruistic personality and the self-report altruism scale. <i>Personality and Individual Differences, 2</i>(4), 293–302.</li>
+      <li>Schimmel, S. (1997). <i>The seven deadly sins: Jewish, Christian, and classical reflections on human psychology.</i> Oxford University Press.</li>
+      <li>Schmitt, D. P., &amp; Buss, D. M. (2001). Human mate poaching: Tactics and temptations for infiltrating existing mateships. <i>Journal of Personality and Social Psychology, 80</i>(6), 894–917.</li>
+      <li>Schnitker, S. A. (2012). An examination of patience and well-being. <i>The Journal of Positive Psychology, 7</i>(4), 263–280.</li>
+      <li>Seuntjens, T. G., Zeelenberg, M., van de Ven, N., &amp; Breugelmans, S. M. (2015). Dispositional greed. <i>Journal of Personality and Social Psychology, 108</i>(6), 917–933.</li>
+      <li>Shaffer, J. A., &amp; Postlethwaite, B. E. (2012). A matter of context: A meta-analytic investigation of the relative validity of contextualized and noncontextualized personality measures. <i>Personnel Psychology, 65</i>(3), 445–494.</li>
+      <li>Smith, R. H. (2013). <i>The joy of pain: Schadenfreude and the dark side of human nature.</i> Oxford University Press.</li>
+      <li>Smith, R. H., Parrott, W. G., Diener, E. F., Hoyle, R. H., &amp; Kim, S. H. (1999). Dispositional envy. <i>Personality and Social Psychology Bulletin, 25</i>(8), 1007–1020.</li>
+      <li>Steel, P. (2010). Arousal, avoidant and decisional procrastinators: Do they exist? <i>Personality and Individual Differences, 48</i>(8), 926–934.</li>
+      <li>Steel, P. (2011). <i>The procrastination equation.</i> Harper.</li>
+      <li>Sukhodolsky, D. G., Golub, A., &amp; Cromwell, E. N. (2001). Development and validation of the anger rumination scale. <i>Personality and Individual Differences, 31</i>(5), 689–700.</li>
+      <li>Tangney, J. P., Baumeister, R. F., &amp; Boone, A. L. (2004). High self-control predicts good adjustment, less pathology, better grades, and interpersonal success. <i>Journal of Personality, 72</i>(2), 271–324.</li>
+      <li>Tracy, J. (2016). <i>Take pride: Why the deadliest sin holds the secret to human success.</i> Houghton Mifflin Harcourt.</li>
+      <li>Tracy, J. L., &amp; Robins, R. W. (2007). The psychological structure of pride: A tale of two facets. <i>Journal of Personality and Social Psychology, 92</i>(3), 506–525.</li>
+      <li>van Strien, T., Frijters, J. E. R., Bergers, G. P. A., &amp; Defares, P. B. (1986). The Dutch Eating Behavior Questionnaire (DEBQ) for assessment of restrained, emotional, and external eating behavior. <i>International Journal of Eating Disorders, 5</i>(2), 295–315.</li>
+      <li>Veselka, L., Giammarco, E. A., &amp; Vernon, P. A. (2014). The Dark Triad and the seven deadly sins. <i>Personality and Individual Differences, 67</i>, 75–80.</li>
+    </ul>
+  </div>
+</details>
+</template>
+
+
+<script>
+(function(){
+'use strict';
+
+/* ================= DATA ================= */
+var ITEMS = {
+  pr1:{d:'pr',s:'讨论时，有人提出和你不同的做法。',r:'你的第一反应是想办法证明自己的更好。'},
+  pr2:{d:'pr',s:'听到别人问一个很基础的问题。',r:'你心里会想：「这都不知道？」'},
+  pr3:{d:'pr',r:'你觉得有些规定是给一般人定的，你的情况可以例外。'},
+  pr4:{d:'pr',s:'别人当面指出你做错了一件事，而且他说得对。',r:'你还是会先找理由解释。'},
+  pr5:{d:'pr',s:'你分享了自己的成绩或好消息。',r:'之后你会一直留意有多少人回应和称赞。'},
+
+  hu1:{d:'hu',s:'讨论时你说错了一个事实，被别人当场指出。',r:'你会直接说「我刚才说错了」。'},
+  hu2:{d:'hu',s:'遇到不懂的东西。',r:'你可以很自然地说「我不太懂，可以解释一下吗？」'},
+  hu3:{d:'hu',s:'一件事做得好，被人称赞。',r:'你会主动提到其他人帮了什么忙。'},
+  hu4:{d:'hu',s:'别人对你的做法提出意见。',r:'你会先认真想想他说得对不对，再回应。'},
+  hu5:{d:'hu',s:'比你年轻或经验比你少的人提出一个好主意。',r:'你会照样认真采纳。'},
+
+  gr1:{d:'gr',s:'刚买到一直想要的东西。',r:'没过几天，你就开始想下一件。'},
+  gr2:{d:'gr',s:'看到「免费领取」或「买一送一」。',r:'即使用不上，你也很想拿。'},
+  gr3:{d:'gr',r:'你觉得拥有更好的东西，会让别人更看得起你。'},
+  gr4:{d:'gr',s:'和别人分东西或分钱。',r:'你会很在意自己有没有比别人少拿。'},
+  gr5:{d:'gr',s:'钱已经够用了，又有机会多赚一点。',r:'你还是会尽量去争取。'},
+
+  ge1:{d:'ge',f:1,q:'你主动把自己的资料、笔记或工具借给别人用。'},
+  ge2:{d:'ge',s:'和朋友一起吃饭。',r:'你常常主动请客，不太计较谁付得多。'},
+  ge3:{d:'ge',s:'有人请你帮一个要花一两个小时的忙，而你刚好有空。',r:'你通常会答应。'},
+  ge4:{d:'ge',s:'家里有用不上但还很新的东西。',r:'你更愿意送给需要的人，而不是拿去卖。'},
+  ge5:{d:'ge',f:1,q:'你为别人花了时间或钱，而且没有期待回报。'},
+
+  lu1:{d:'lu',s:'在街上看到一个很吸引你的人。',r:'你会忍不住多看好几眼。'},
+  lu2:{d:'lu',f:1,q:'你在社交媒体上看好看的人的照片或视频，看到停不下来。'},
+  lu3:{d:'lu',r:'你会花不少时间幻想和喜欢的人之间的浪漫情节。'},
+  lu4:{d:'lu',s:'已经有喜欢的人或伴侣。',r:'你仍会和其他有好感的人暧昧聊天。'},
+  lu5:{d:'lu',r:'你很容易对刚认识、外表吸引你的人心动。'},
+
+  ch1:{d:'ch',s:'有伴侣或喜欢的人时，有其他人对你表示好感。',r:'你会主动和对方保持距离。'},
+  ch2:{d:'ch',s:'刚认识的人很热情地向你示好。',r:'你会先保持一点距离，等了解多一点再说。'},
+  ch3:{d:'ch',s:'你对一个已经有伴侣的人有好感。',r:'你不会主动去接近对方。'},
+  ch4:{d:'ch',s:'朋友聊天时拿别人的身材或外表开玩笑。',r:'你不会跟着一起评论。'},
+  ch5:{d:'ch',s:'你对某个人没有那种感觉。',r:'你会说清楚，不会为了享受被喜欢而继续暧昧。'},
+
+  en1:{d:'en',s:'朋友拿到了你也很想要的机会。',r:'你恭喜他的时候，心里有点不是滋味。'},
+  en2:{d:'en',f:1,q:'你看到别人分享的生活，觉得自己过得不如人。'},
+  en3:{d:'en',s:'一个你不太喜欢的人遇到倒霉事。',r:'你心里会有点暗爽。'},
+  en4:{d:'en',s:'看到别人轻松得到你很努力才得到的东西。',r:'你会觉得很不公平。'},
+  en5:{d:'en',s:'别人被大家称赞。',r:'你会忍不住想到他的缺点。'},
+
+  ki1:{d:'ki',s:'朋友告诉你他的好消息。',r:'你是真心替他高兴。'},
+  ki2:{d:'ki',s:'朋友这几天话变少、情绪低落。',r:'你会主动问他怎么了。'},
+  ki3:{d:'ki',f:1,q:'你主动帮助陌生人，例如指路、帮忙捡东西、替人扶门。'},
+  ki4:{d:'ki',s:'需要指出别人的错误。',r:'你会选一个不让对方难堪的方式说。'},
+  ki5:{d:'ki',s:'聚会或小组里，有人被冷落在一旁。',r:'你会主动和他说话。'},
+
+  wr1:{d:'wr',s:'一起合作的人迟迟不交他负责的部分，离截止只剩两天。',r:'你会在群里说一句带火气的话。'},
+  wr2:{d:'wr',f:1,q:'你因为一点小事（例如网速慢、东西找不到）大发脾气。'},
+  wr3:{d:'wr',s:'有人得罪过你。',r:'过了很久，你想起来还是很生气。'},
+  wr4:{d:'wr',s:'在气头上的时候。',r:'你会说出一些事后后悔的话。'},
+  wr5:{d:'wr',s:'有人对你不公平。',r:'你会想找机会让他也尝尝同样的滋味。'},
+
+  pa1:{d:'pa',s:'排了很久的队，前面的人还在慢慢问问题。',r:'你能平静地继续等。'},
+  pa2:{d:'pa',s:'同一件事要向别人解释第三遍。',r:'你还是能好好讲，不会不耐烦。'},
+  pa3:{d:'pa',s:'朋友约好见面，却迟到了二十分钟。',r:'你不会太在意。'},
+  pa4:{d:'pa',s:'努力了很久，还看不到成果。',r:'你仍能沉得住气。'},
+  pa5:{d:'pa',s:'想要的东西要等两个星期才有。',r:'你愿意等，而不是马上买一个差一点的替代品。'},
+
+  gl1:{d:'gl',f:1,q:'你已经吃饱了，却因为好吃又继续吃到很撑。'},
+  gl2:{d:'gl',s:'心情不好或压力大的时候。',r:'你会靠吃东西让自己好过一点。'},
+  gl3:{d:'gl',f:1,q:'本来只想看一集，结果一直看到凌晨。'},
+  gl4:{d:'gl',f:1,q:'你一刷短视频就刷了超过一个小时。'},
+  gl5:{d:'gl',s:'看到别人在吃好吃的东西，而你并不饿。',r:'你还是会很想吃。'},
+
+  te1:{d:'te',s:'吃到七八分饱，桌上还有好吃的。',r:'你能停下来不再吃。'},
+  te2:{d:'te',s:'说好只玩半小时手机或游戏。',r:'你基本能准时停下。'},
+  te3:{d:'te',s:'遇到打折。',r:'你只买原本计划要买的东西。'},
+  te4:{d:'te',s:'明天要早起，剧正看得起劲。',r:'你还是会按时去睡。'},
+  te5:{d:'te',s:'聚会时，别人一直劝你多喝一点。',r:'你能按自己的分寸停下。'},
+
+  sl1:{d:'sl',f:1,q:'一件事明明可以早点做，你却拖到最后一两天才开始。'},
+  sl2:{d:'sl',f:1,q:'你连续按掉闹钟三次以上才起床。'},
+  sl3:{d:'sl',s:'知道该开始做正事了。',r:'你还是会先刷一下手机，结果拖了很久。'},
+  sl4:{d:'sl',r:'洗碗、洗衣服、收拾房间这类家务，你常常放到不得不处理才处理。'},
+  sl5:{d:'sl',s:'做一件事的时候。',r:'你通常做到「能交差」就停，不会多花力气。'},
+
+  di1:{d:'di',s:'接到一个几个星期后才要交的任务。',r:'你会在头几天就先开始做一点。'},
+  di2:{d:'di',s:'做到很难的部分。',r:'你会坚持弄懂或做完，而不是先跳过。'},
+  di3:{d:'di',s:'即使没有人会检查。',r:'你也会把事情做到自己满意为止。'},
+  di4:{d:'di',f:1,q:'你按照自己定的计划，完成了一整天要做的事。'},
+  di5:{d:'di',s:'和别人一起做事时。',r:'你常常是那个主动推进进度的人。'},
+
+  id1:{d:'id',r:'你从来没有在背后说过任何人的坏话。'},
+  id2:{d:'id',r:'不管多累多烦，你从来没有对身边的人不耐烦过。'},
+  id3:{d:'id',r:'你从来没有为了不想去某个地方而找借口。'},
+  id4:{d:'id',r:'你对每个人都一样友善，包括你很讨厌的人。'}
+};
+
+var ORDER = ["wr1","ge2","sl5","ki3","gr2","te5","pr4","pa1","lu1","di1","en2","ch1","gl4","hu3","sl2","ge3","wr2","id1","te4","gr3","ki2","pr3","pa3","lu2","di5","en4","ch2","gl1","hu4","wr5","ge5","sl4","ki1","pr1","te2","id2","gr1","di4","lu5","pa4","en1","hu1","gl5","ch5","wr4","ge1","sl3","te3","pr2","ki5","gr5","di2","lu4","id3","pa5","en3","ch4","gl3","hu5","wr3","ge4","sl1","te1","pr5","ki4","gr4","di3","lu3","pa2","en5","id4","ch3","gl2","hu2"];
+
+var SCALE_S = ['完全不像我','不太像我','一半一半','比较像我','非常像我'];
+var SCALE_F = ['0 次','1–2 次','大约每周一次','每周几次','几乎每天'];
+
+// 雷达图从上到下的七对：左罪右德
+var PAIRS = [['sl','di'],['gl','te'],['wr','pa'],['en','ki'],['gr','ge'],['lu','ch'],['pr','hu']];
+
+var DIMS = {
+  sl:{name:'懒惰',side:'sin',concept:'这里的懒惰指拖延：明知道要做，也知道拖下去对自己不利，仍然把事情往后推，或用别的事来逃避。',
+      basis:'Steel（2010）纯拖延量表；Steel（2011）The Procrastination Equation',
+      band:{low:'你很少拖延，该做的事通常会按时开始，也不太需要截止日期来推自己。',
+            mid:'不喜欢或不急的事你会拖一下，但重要的事通常还能按时完成。',
+            high:'你常把事情拖到最后，开始之前会先做别的事来逃避。拖延多数不是因为不在乎，而是开始那一刻的不舒服让人想躲开。'},
+      tip:{low:'保持现在的节奏就好。',
+           mid:'留意你会拖的是哪一类事情，通常是最无聊或最没把握的那一类。',
+           high:'把第一步定得非常小，例如「只打开文件写一句」，开始之后通常就能继续。如果长期提不起劲、什么都不想做，可能和压力、睡眠或情绪有关，不一定是懒。'}},
+  di:{name:'勤勉',side:'virtue',concept:'勤勉指愿意提早开始、遇到困难坚持下去、没人检查也认真做，以及在合作中主动推进。',
+      basis:'Duckworth 等（2007）恒毅力量表；DeYoung 等（2007）大五人格的「勤奋」面向；Duckworth（2016）Grit',
+      band:{low:'你比较少提早开始或主动多做，多数是按需要完成。',
+            mid:'在你在乎的事情上你会很投入，其他事情则做到够用就好。',
+            high:'你会提早开始，坚持把难的部分做完，没人检查也会做好，常是推动事情前进的人。'},
+      tip:{low:'选一件你真正在乎的事，先在那件事上练习提早开始。',
+           mid:'想想让你投入的事有什么共同点，再把这些条件带到其他事情上。',
+           high:'记得安排休息。长期把自己推得太紧，容易累垮。'}},
+  gl:{name:'暴食',side:'sin',concept:'这里的暴食不只是吃，而是各种开始了就停不下来的享受：吃到撑、追剧到凌晨、刷短视频停不下来，以及用吃来调节情绪。',
+      basis:'van Strien 等（1986）荷兰饮食行为问卷中的情绪性与外因性进食；Tangney 等（2004）自我控制量表',
+      band:{low:'你很少吃到撑或刷到停不下来，开始一件享受的事也能自己停下来。',
+            mid:'你偶尔会放纵一下，多数发生在累了或心情不好的时候，但不算经常。',
+            high:'好吃的、好看的、好刷的，一开始就很难停下来，有时你会用它们来缓解情绪。'},
+      tip:{low:'保持；偶尔放纵一下也没关系。',
+           mid:'留意放纵通常发生在什么时间、什么心情，那就是最容易调整的地方。',
+           high:'把「停下来」变成事先的安排，例如先定好看几集、刷多久，而不是靠当下的意志力。'}},
+  te:{name:'节制',side:'virtue',concept:'节制指能按自己定的分寸停下来，不被当下的诱惑带走，包括吃、玩手机、购物和睡觉时间。',
+      basis:'Tangney 等（2004）简版自我控制量表；Peterson & Seligman（2004）品格优势与美德分类；Baumeister & Tierney（2011）Willpower',
+      band:{low:'当下的享受和诱惑比较容易让你忘了原本的计划。',
+            mid:'在你在乎的事情上能控制自己，其他时候则比较随性。',
+            high:'你能按自己定的分寸停下来，很少被一时的诱惑带走。'},
+      tip:{low:'少靠意志力，多靠环境：把手机放远一点，比要求自己不看容易得多。',
+           mid:'给最容易失控的那一件事定一条具体的规则，例如十二点后不开新的一集。',
+           high:'节制很好，但也要留一些放松的空间，不必每件事都管得很紧。'}},
+  wr:{name:'暴怒',side:'sin',concept:'暴怒指容易被激怒、生气时说出伤人的话、被得罪后反复想起，以及想报复。',
+      basis:'Buss & Perry（1992）攻击性问卷；Sukhodolsky 等（2001）愤怒反刍量表；McCullough 等（1998）人际冒犯动机量表',
+      band:{low:'你很少发火，被得罪后也比较容易放下。',
+            mid:'你会生气，也会表现出来，但通常不会失控，也不会记很久。',
+            high:'你比较容易被小事激怒，生气时会说重话，被得罪后也会记很久。'},
+      tip:{low:'不发火不等于没有不满。该表达的不满，可以冷静地说出来。',
+           mid:'留意哪一类事情最容易点燃你，事先想好遇到时怎样回应。',
+           high:'生气时先离开现场，或等十分钟再回复消息。愤怒的高峰通常很快就会过去。'}},
+  pa:{name:'耐心',side:'virtue',concept:'耐心指能平静面对等待、别人的慢和失误，以及长时间看不到成果的情况。研究把它分成对人的耐心、对日常烦扰的耐心和对人生困境的耐心。',
+      basis:'Schnitker（2012）三因素耐心量表；Mischel（2014）The Marshmallow Test',
+      band:{low:'等待和别人的慢很容易让你烦躁，你希望事情快一点有结果。',
+            mid:'一般的等待你可以接受，但时间一长，或连续遇到不顺时，会变得不耐烦。',
+            high:'你能平静地等待，对别人的慢和失误也比较包容。'},
+      tip:{low:'等待时给自己找一件小事做，例如听歌或回一条消息，等待会比较容易过。',
+           mid:'不耐烦快出现时，先问自己：「再等一下，最坏会怎样？」',
+           high:'耐心也要有界线。对一再越界的人，不必一直忍。'}},
+  en:{name:'嫉妒',side:'sin',concept:'嫉妒指和别人比较后感到不舒服、觉得不公平，甚至对别人的失败暗自高兴。研究区分了想追上对方的「善意嫉妒」和想拉低对方的「恶意嫉妒」。',
+      basis:'Smith 等（1999）特质嫉妒量表；Lange & Crusius（2015）善意与恶意嫉妒量表；Smith（2013）The Joy of Pain',
+      band:{low:'你很少因为别人的成就而难受，也不太和别人比较。',
+            mid:'在你特别在意的方面，别人比你好时你会有点酸，但很快就会过去。',
+            high:'你常把别人的好和自己比较，这些比较常让你不舒服，有时会影响你对对方的看法。'},
+      tip:{low:'保持。',
+           mid:'下次觉得酸时，问自己羡慕的是哪一点，再看看它值不值得成为你的目标。',
+           high:'把「他凭什么」换成「他是怎样做到的」。注意力放在追上，而不是对方失去，嫉妒就会变成动力。'}},
+  ki:{name:'仁慈',side:'virtue',concept:'仁慈指对别人的善意：真心为别人高兴、主动关心、帮助陌生人，以及照顾别人的面子和感受。',
+      basis:'Peterson & Seligman（2004）品格优势与美德分类；Gable 等（2004）关于别人分享好消息时如何回应的研究',
+      band:{low:'你比较少主动关心别人的状况，可能是因为你习惯等别人开口。',
+            mid:'对身边的人你会关心和帮忙，但不一定会主动留意别人的需要。',
+            high:'你常主动留意别人的情绪和需要，也会照顾到别人的面子和感受。'},
+      tip:{low:'下次朋友分享好消息时，多问一句细节，这是最简单的关心。',
+           mid:'试着留意一个平时不太说话的人，主动和他聊几句。',
+           high:'照顾别人之余，也要照顾自己的情绪和精力。'}},
+  gr:{name:'贪婪',side:'sin',concept:'贪婪指得到了仍不满足、总想要更多、很怕自己少拿。心理学研究把它定义为「永远不满足、总想要更多」的倾向。',
+      basis:'Seuntjens 等（2015）特质贪婪量表；Richins & Dawson（1992）物质价值量表',
+      band:{low:'你对拥有更多不太执着，得到想要的东西后能满足一段时间。',
+            mid:'你会被优惠和更好的东西吸引，也会在意得失，但不算强烈。',
+            high:'得到之后你很快就想要下一个，对「多拿一点」「不吃亏」比较敏感。'},
+      tip:{low:'保持；需要时也可以为自己争取应得的部分。',
+           mid:'买东西前问自己：「如果没有优惠，我还会买吗？」',
+           high:'争取之前问自己一句：「拿到之后，我会满足多久？」'}},
+  ge:{name:'慷慨',side:'virtue',concept:'慷慨指愿意把时间、金钱和东西分给别人，而且不计较回报。',
+      basis:'Peterson & Seligman（2004）品格优势与美德分类；Rushton 等（1981）利他行为自评量表',
+      band:{low:'你比较少主动付出时间或金钱，可能是资源有限，也可能是习惯先照顾好自己。',
+            mid:'对熟悉的人你愿意分享和帮忙，对不熟的人则比较有保留。',
+            high:'你常主动分享和帮忙，而且不太计较回报。'},
+      tip:{low:'从不用花钱的小事开始，例如把用不上的资料分享出去。',
+           mid:'下次有人需要帮忙而你刚好有空，可以试试先答应。',
+           high:'慷慨也需要界线。留意自己有没有因为不好意思拒绝而过度付出。'}},
+  lu:{name:'色欲',side:'sin',concept:'这里的色欲是温和版，只看恋爱和外表吸引：容易被吸引、常幻想浪漫情节、容易心动，以及有对象时仍和别人暧昧。不涉及性方面的问题。',
+      basis:'改编自 Penke & Asendorpf（2008）修订版社会性取向量表中的「欲望」部分',
+      band:{low:'你不太容易被外表吸引，也很少沉浸在恋爱幻想中。',
+            mid:'你会被吸引、会心动，但多数时候不会让它影响你的行为。',
+            high:'你很容易被吸引和心动，好看的人和浪漫的想象常占用你的注意力。'},
+      tip:{low:'没有特别需要调整的地方。',
+           mid:'心动很正常，重要的是行动之前想清楚。',
+           high:'心动很正常。行动之前，先想想这会不会影响你重视的关系。'}},
+  ch:{name:'贞洁',side:'virtue',concept:'这里的贞洁按现代意思理解：有对象时和其他人保持距离、不因一时冲动开始关系、尊重别人的感情界线，以及不吊着别人。',
+      basis:'Rusbult 等（1998）投资模型量表；Miller（1997）关于对其他潜在对象的注意力的研究',
+      band:{low:'你对感情里的界线没有特别强的坚持，较少主动和别人保持距离。',
+            mid:'在重要的关系里你会守住界线，但对一般的暧昧和玩笑没有那么在意。',
+            high:'你很重视感情里的承诺和界线，不太会因为一时心动而行动。'},
+      tip:{low:'想一想，在你最重视的关系里，你希望对方守住哪些界线，自己也可以从这些开始。',
+           mid:'把你在重要关系里的标准，也用在一般的暧昧上，会少很多误会。',
+           high:'保持；同时也不必因为太谨慎而错过认识别人的机会。'}},
+  pr:{name:'傲慢',side:'sin',concept:'傲慢指觉得自己高人一等、需要被肯定、很难认错。研究把自豪分成来自努力的「真实自豪」和来自自觉优越的「傲慢自豪」，这里测的是后者。',
+      basis:'Tracy & Robins（2007）自豪的两个面向；Raskin & Terry（1988）自恋人格量表；Campbell 等（2004）心理特权量表；Tracy（2016）Take Pride',
+      band:{low:'你很少觉得自己比别人高一等，被指出错误时也不太会急着辩解。',
+            mid:'在某些场合你会想证明自己是对的，或希望得到肯定，但多数时候仍能听进别人的意见。',
+            high:'你很相信自己的判断，被反驳或被纠正时，第一反应常是维护自己，也很在意别人有没有认可你。'},
+      tip:{low:'保持开放；合理地肯定自己的成果也很重要。',
+           mid:'留意自己在哪些场合特别想赢，那通常是你最在意、也最没把握的地方。',
+           high:'被指出错误时，先说一句「让我想一下」，给自己几秒钟再回应。'}},
+  hu:{name:'谦逊',side:'virtue',concept:'谦逊指能承认不懂和错误、愿意向任何人学习、不独占功劳。这和自卑不同：谦逊的人对自己有准确的认识。',
+      basis:'Ashton & Lee（2009）HEXACO 六因素人格模型中的「诚实—谦逊」因素；Leary 等（2017）智识谦逊研究；Lee & Ashton（2012）The H Factor of Personality',
+      band:{low:'你较少主动承认不懂或认错，可能是在意形象，也可能觉得没有必要说出来。',
+            mid:'面对熟悉、信任的人，你比较容易认错和请教；在陌生或有压力的场合则会保留一些。',
+            high:'你很自然地说「我不懂」「我错了」，也愿意把功劳分给别人。'},
+      tip:{low:'下一次不懂时，试着直接问一句。多数人会觉得这是坦诚，而不是无能。',
+           mid:'在有压力的场合也试一次说「我不确定」，看看结果是不是没有想象中那么糟。',
+           high:'谦逊不等于压低自己。有成果时，也可以大方说出你的贡献。'}}
+};
+
+// 组合解读：HL＝罪高德低，LH＝罪低德高，HH＝两边都高，LL＝两边都低，MM＝两边都中等
+var COMBOS = {
+  sl:{HL:['拖延主导型','事情常拖到最后，也比较少主动多做。开始一件事的门槛对你来说比较高。'],
+      LH:['稳定推进型','很少拖延，也会主动把事情做好，别人通常觉得你很可靠。'],
+      HH:['间歇性爆发型','平时会拖，但到了关键时刻会拼命赶出来，而且做得不差。截止日期是你最常用的启动器。'],
+      LL:['按部就班型','不太拖，也不会特别拼，按需要把事情完成。'],
+      MM:['看事情而定型','拖不拖、拼不拼，主要看这件事你有多在乎。']},
+  gl:{HL:['容易放纵型','好吃的、好看的、好刷的，开始了就很难自己喊停。'],
+      LH:['自律节制型','很少放纵过头，也能按自己定的分寸停下来。'],
+      HH:['时紧时松型','有时很能控制，有时一放松就收不住，转折点常常是心情和压力。'],
+      LL:['随性自在型','不太会放纵过头，但也不特别给自己定规矩，多数时候顺其自然。'],
+      MM:['看场合型','放松的时候容易多一点，有事要做时能收住。']},
+  wr:{HL:['急躁易怒型','等不了，也容易把不满直接说出口。'],
+      LH:['心平气和型','等待和别人的失误都比较能接受，很少发火。'],
+      HH:['忍到爆型','平时很能忍，但不满会累积，到了某个点会一次爆发。'],
+      LL:['急但不凶型','你不太能等，容易觉得烦，但很少真的对人发火，不耐烦多数留在心里。'],
+      MM:['温度适中型','会烦也会生气，但多数时候控制得住，很少走到极端。']},
+  en:{HL:['比较敏感型','容易把别人的好和自己比，比较后的不舒服会影响你对对方的态度。'],
+      LH:['真心祝福型','很少因为别人过得好而难受，也常主动关心别人。'],
+      HH:['又酸又暖型','别人好的时候你会酸，但仍然会真心对他好。这两种感受同时存在很正常。'],
+      LL:['各过各的型','不太和别人比较，也不会特别主动关心别人，人际上保持一点距离。'],
+      MM:['看对象而定型','对亲近的人多数是真心祝福；遇到和你在同一条跑道上的人，比较就容易出来。']},
+  gr:{HL:['精打细算型','很在意得失，想要更多，也不太愿意多付出。'],
+      LH:['大方知足型','对拥有更多不太执着，也愿意把时间和东西分给别人。'],
+      HH:['想要也舍得型','你想要更多，但对在乎的人很大方。'],
+      LL:['淡定随缘型','对得失不太执着，也不会特别主动付出，物质上比较随缘。'],
+      MM:['有来有往型','会在意得失，也愿意付出，多数时候讲求有来有往。']},
+  lu:{HL:['容易心动型','很容易被吸引，也比较少刻意守住界线。'],
+      LH:['专一克制型','不太容易被外表吸引，在感情里也很重视界线和承诺。'],
+      HH:['心动但守得住型','你会被吸引、会心动，但真正行动时会守住界线。'],
+      LL:['感情淡定型','不太容易心动，对感情界线也没有特别的坚持，感情目前可能不是你生活的重点。'],
+      MM:['看人而定型','心动和克制都不算强，遇到真正喜欢的人时，表现可能会很不一样。']},
+  pr:{HL:['自我中心型','很相信自己的判断，不太容易接受别人的意见或认错。'],
+      LH:['虚心开放型','不觉得自己高人一等，也愿意认错和向别人学习。'],
+      HH:['先硬后软型','第一反应是维护自己，但冷静下来后，你会承认错误、接受意见。'],
+      LL:['低调但不松口型','不会觉得自己比别人强，但也不太会主动认错或请教。'],
+      MM:['看场合型','在熟悉的场合你愿意认错，在有压力或竞争的场合则比较想证明自己。']}
+};
+
+// 正反题：两题都选 4 或 5 视为矛盾
+var CONSIST = [['sl1','di1'],['gl1','te1'],['lu4','ch1'],['pr4','hu1'],['gl3','te4'],['sl5','di3']];
+var IDEAL = ['id1','id2','id3','id4'];
+
+
+// 每一题对应的量表面向
+var SRC = {
+  pr1:'傲慢型自豪「觉得自己比别人优越」（Tracy & Robins, 2007）',
+  pr2:'傲慢型自豪「看不起别人」（Tracy & Robins, 2007）',
+  pr3:'心理特权「觉得自己理应被特殊对待」（Campbell 等, 2004）',
+  pr4:'智识谦逊的反面「被纠正时先为自己辩护」（Leary 等, 2017）',
+  pr5:'自恋「需要别人的关注和赞美」（Raskin & Terry, 1988 自恋人格量表）',
+  hu1:'智识谦逊「承认自己错了」（Leary 等, 2017）',
+  hu2:'智识谦逊「承认自己知道得有限」（Leary 等, 2017）',
+  hu3:'谦逊「不独占功劳」（HEXACO 六因素人格模型的诚实—谦逊因素，Ashton & Lee, 2009）',
+  hu4:'智识谦逊「认真考虑不同意见」（Leary 等, 2017）',
+  hu5:'谦逊「不按身份地位看人」（HEXACO 诚实—谦逊因素，Ashton & Lee, 2009）',
+  gr1:'特质贪婪「得到之后仍不满足」（Seuntjens 等, 2015 特质贪婪量表）',
+  gr2:'特质贪婪「总想得到更多」（Seuntjens 等, 2015）',
+  gr3:'物质主义「用拥有的东西衡量成功」（Richins & Dawson, 1992 物质价值量表）',
+  gr4:'特质贪婪「以自己的得失为先」（Seuntjens 等, 2015）',
+  gr5:'特质贪婪「钱永远不嫌多」（Seuntjens 等, 2015）',
+  ge1:'利他行为「把东西借给别人」，按次数问（Rushton 等, 1981 利他行为自评量表）',
+  ge2:'慷慨「大方付出，不计较」（Peterson & Seligman, 2004 品格优势与美德分类）',
+  ge3:'利他行为「花时间帮别人」（Rushton 等, 1981）',
+  ge4:'利他行为「把物品送给有需要的人」（Rushton 等, 1981）',
+  ge5:'慷慨「不求回报的付出」，按次数问（Peterson & Seligman, 2004）',
+  lu1:'对有吸引力的人的注意力（Miller, 1997）',
+  lu2:'对有吸引力的人的注意力，按次数问（Miller, 1997）',
+  lu3:'社会性取向量表「欲望」部分的温和改编「浪漫幻想」（Penke & Asendorpf, 2008）',
+  lu4:'对伴侣以外的人的兴趣（Rusbult 等, 1998 投资模型量表；Miller, 1997）',
+  lu5:'社会性取向量表「欲望」部分的温和改编「对刚认识的人心动」（Penke & Asendorpf, 2008）',
+  ch1:'有对象时不留意其他人（Miller, 1997）',
+  ch2:'社会性取向量表「态度」部分的温和改编「先了解再亲近」（Penke & Asendorpf, 2008）',
+  ch3:'不介入别人的感情关系（Schmitt & Buss, 2001）',
+  ch4:'本测试对贞洁的现代诠释（尊重别人，不评论别人的外表），没有直接对应的量表',
+  ch5:'真诚「不为了自己的好处吊着别人」（HEXACO 诚实—谦逊因素，Ashton & Lee, 2009）',
+  en1:'特质嫉妒「别人成功时的不舒服」（Smith 等, 1999 特质嫉妒量表）',
+  en2:'特质嫉妒「和别人比较后觉得不如人」，按次数问（Smith 等, 1999）',
+  en3:'幸灾乐祸（Smith, 2013）',
+  en4:'特质嫉妒「觉得别人的优势不公平」（Smith 等, 1999）',
+  en5:'恶意嫉妒「贬低比自己好的人」（Lange & Crusius, 2015 善意与恶意嫉妒量表）',
+  ki1:'真心回应别人的好消息（Gable 等, 2004）',
+  ki2:'仁慈「主动关心别人」（Peterson & Seligman, 2004）',
+  ki3:'利他行为「帮助陌生人」，按次数问（Rushton 等, 1981）',
+  ki4:'仁慈「照顾别人的感受」（Peterson & Seligman, 2004）',
+  ki5:'同理关怀「留意被冷落的人」（Davis, 1983 人际反应指数量表）',
+  wr1:'言语攻击（Buss & Perry, 1992 攻击性问卷）',
+  wr2:'愤怒「为小事发脾气」，按次数问（Buss & Perry, 1992）',
+  wr3:'愤怒反刍「反复想起被得罪的事」（Sukhodolsky 等, 2001 愤怒反刍量表）',
+  wr4:'愤怒「控制不住脾气」（Buss & Perry, 1992）',
+  wr5:'报复动机（McCullough 等, 1998 人际冒犯动机量表）',
+  pa1:'日常烦扰中的耐心（Schnitker, 2012 三因素耐心量表）',
+  pa2:'对人的耐心（Schnitker, 2012）',
+  pa3:'对人的耐心（Schnitker, 2012）',
+  pa4:'面对困境的耐心（Schnitker, 2012）',
+  pa5:'延迟满足（Mischel, 2014）',
+  gl1:'外因性进食「好吃就多吃」，按次数问（van Strien 等, 1986 荷兰饮食行为问卷）',
+  gl2:'情绪性进食（van Strien 等, 1986）',
+  gl3:'自我控制不足「停不下来的娱乐」，按次数问（Tangney 等, 2004 自我控制量表）',
+  gl4:'自我控制不足「停不下来的娱乐」，按次数问（Tangney 等, 2004）',
+  gl5:'外因性进食「看到别人吃就想吃」（van Strien 等, 1986）',
+  te1:'节制「适可而止」（Peterson & Seligman, 2004）',
+  te2:'自我控制「按时停下」（Tangney 等, 2004）',
+  te3:'自我控制「不冲动消费」（Tangney 等, 2004）',
+  te4:'自我控制「为明天放下眼前的享受」（Tangney 等, 2004）',
+  te5:'自我调节「按自己的分寸」（Peterson & Seligman, 2004）',
+  sl1:'拖延「迟迟不开始」，按次数问（Steel, 2010 纯拖延量表）',
+  sl2:'拖延「起床的拖延」，按次数问（Lay, 1986 一般拖延量表）',
+  sl3:'拖延「用别的事逃避正事」（Steel, 2010）',
+  sl4:'拖延「日常小事一拖再拖」（Lay, 1986）',
+  sl5:'勤奋的反面「只做最低限度」（DeYoung 等, 2007 大五人格面向量表）',
+  di1:'勤奋「尽早开始」（DeYoung 等, 2007）',
+  di2:'恒毅力「遇到困难坚持下去」（Duckworth 等, 2007 恒毅力量表）',
+  di3:'勤奋「自己要求做好」（DeYoung 等, 2007）',
+  di4:'勤奋「按计划完成」，按次数问（DeYoung 等, 2007）',
+  di5:'恒毅力「主动把事情推进到完成」（Duckworth 等, 2007）',
+  id1:'美化检查「印象管理题」（Paulhus, 1991）',
+  id2:'美化检查「社会赞许性题」（Crowne & Marlowe, 1960）',
+  id3:'美化检查「印象管理题」（Paulhus, 1991）',
+  id4:'美化检查「社会赞许性题」（Crowne & Marlowe, 1960）'
+};
+
+
+/* ================= STORAGE ================= */
+var LS_HIST='sv14.history.v1', LS_PROG='sv14.progress.v1', LS_NICK='sv14.nick.v1';
+var store = {
+  get:function(k,fb){try{var v=localStorage.getItem(k);return v==null?fb:JSON.parse(v);}catch(e){return fb;}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}},
+  del:function(k){try{localStorage.removeItem(k);}catch(e){}},
+  ok:(function(){try{var t='__sv14';localStorage.setItem(t,'1');localStorage.removeItem(t);return true;}catch(e){return false;}})()
+};
+
+/* ================= HELPERS ================= */
+function $(id){return document.getElementById(id);}
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+var SVGNS='http://www.w3.org/2000/svg';
+function sv(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+function fmt(n){return (Math.round(n*10)/10).toFixed(1);}
+function band(s){return s<=3?'low':(s>=6.5?'high':'mid');}
+var BAND_ZH={low:'低',mid:'中',high:'高'};
+function comboKey(s,v){if(s>=4&&s<=6&&v>=4&&v<=6)return 'MM';return (s>=5?'H':'L')+(v>=5?'H':'L');}
+function pad(n){return (n<10?'0':'')+n;}
+function dateZh(ts,withTime){var d=new Date(ts);var t=d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日';if(withTime)t+=' '+pad(d.getHours())+':'+pad(d.getMinutes());return t;}
+function dateShort(ts){var d=new Date(ts);return (d.getMonth()+1)+' 月 '+d.getDate()+' 日 '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function delta(a,b){var x=Math.round((a-b)*10)/10;if(x===0)return '持平';return (x>0?'+':'−')+Math.abs(x).toFixed(1);}
+function itemText(it){return it.f?('过去一个月：'+it.q.replace(/。$/,'')):((it.s||'')+it.r);}
+function scaleOf(it){return it.f?SCALE_F:SCALE_S;}
+function prefersReduced(){try{return matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+function copyText(text,msgEl,fbEl,okText){
+  function fallback(){fbEl.value=text;fbEl.hidden=false;fbEl.focus();fbEl.select();msgEl.textContent='无法自动复制，请手动复制下面的文字。';}
+  try{navigator.clipboard.writeText(text).then(function(){msgEl.textContent=okText||'已复制';fbEl.hidden=true;setTimeout(function(){msgEl.textContent='';},2500);},fallback);}catch(e){fallback();}
+}
+
+/* ================= SCORING ================= */
+function scoreAll(ans){var sc={};for(var d in DIMS){var sum=0;for(var k=1;k<=5;k++)sum+=ans[d+k];sc[d]=(sum-5)/2;}return sc;}
+function qualityOf(ans,avgSec){
+  var inc=[];CONSIST.forEach(function(p,i){if(ans[p[0]]>=4&&ans[p[1]]>=4)inc.push(i);});
+  var ideal=IDEAL.filter(function(id){return ans[id]>=4;}).length;
+  return {inc:inc,ideal:ideal,avg:avgSec,totalMin:avgSec*ORDER.length/60};
+}
+function avgSecOf(times){var total=0;ORDER.forEach(function(id){total+=Math.min(times[id]||0,60000);});return total/ORDER.length/1000;}
+function topOf(sc,side){var best=-1,names=[];for(var d in DIMS){if(DIMS[d].side!==side)continue;if(sc[d]>best){best=sc[d];names=[d];}else if(sc[d]===best)names.push(d);}return {score:best,dims:names};}
+function topNames(t){var n=t.dims.map(function(d){return DIMS[d].name;});return n.length<=2?n.join('、'):(n.slice(0,2).join('、')+' 等 '+n.length+' 项');}
+
+/* ================= VIEWS ================= */
+var views={start:$('v-start'),quiz:$('v-quiz'),result:$('v-result')};
+function show(name){for(var k in views)views[k].hidden=(k!==name);window.scrollTo(0,0);}
+document.querySelectorAll('.about-slot').forEach(function(slot){slot.appendChild(document.importNode($('tpl-about').content,true));});
+document.addEventListener('click',function(e){if(e.target&&e.target.classList&&e.target.classList.contains('hit'))return;document.querySelectorAll('.tip-box').forEach(function(t){t.hidden=true;});});
+
+/* ================= WHEEL ================= */
+var R=118, LR=134;
+function axisXY(k,side,r){var th=(k+0.5)*Math.PI/7;var x=r*Math.sin(th)*(side==='virtue'?1:-1);return [x,-r*Math.cos(th)];}
+function drawWheel(host,sc,prev,opts){
+  opts=opts||{};
+  host.textContent='';
+  var svg=sv('svg',{viewBox:'-180 -172 360 344',role:'img'});
+  svg.setAttribute('aria-label',sc?('14 维轮廓：'+PAIRS.map(function(p){return DIMS[p[0]].name+' '+fmt(sc[p[0]])+'，'+DIMS[p[1]].name+' '+fmt(sc[p[1]]);}).join('；')):'14 维轮廓示意：左边七宗罪，右边七美德');
+  var grid=sv('g',{'aria-hidden':'true'});
+  [2,4,6,8,10].forEach(function(v){grid.appendChild(sv('circle',{cx:0,cy:0,r:R*v/10,'class':'ring'}));});
+  PAIRS.forEach(function(p,k){['sin','virtue'].forEach(function(side){var e=axisXY(k,side,R);grid.appendChild(sv('line',{x1:0,y1:0,x2:e[0].toFixed(1),y2:e[1].toFixed(1),'class':'spoke'}));});});
+  [2,4,6,8,10].forEach(function(v){var t=sv('text',{x:0,y:(-R*v/10+3.5).toFixed(1),'class':'ringlab'});t.textContent=v;grid.appendChild(t);});
+  svg.appendChild(grid);
+  var tip=null;
+  if(sc){
+    var g=sv('g',{'class':opts.animate?'grow':''});
+    var half=function(side,scores,cls){var d='M0 0';PAIRS.forEach(function(p,k){var dim=side==='sin'?p[0]:p[1];var xy=axisXY(k,side,R*scores[dim]/10);d+=' L'+xy[0].toFixed(1)+' '+xy[1].toFixed(1);});return sv('path',{d:d+' Z','class':cls});};
+    if(prev){g.appendChild(half('sin',prev,'area-prev'));g.appendChild(half('virtue',prev,'area-prev'));}
+    g.appendChild(half('sin',sc,'area-sin'));
+    g.appendChild(half('virtue',sc,'area-virtue'));
+    PAIRS.forEach(function(p,k){['sin','virtue'].forEach(function(side){var d=side==='sin'?p[0]:p[1];var xy=axisXY(k,side,R*sc[d]/10);g.appendChild(sv('circle',{cx:xy[0].toFixed(1),cy:xy[1].toFixed(1),r:4.5,'class':side==='sin'?'pt-sin':'pt-virtue'}));});});
+    svg.appendChild(g);
+    tip=el('div','tip-box');tip.hidden=true;
+  }
+  PAIRS.forEach(function(p,k){['sin','virtue'].forEach(function(side){
+    var d=side==='sin'?p[0]:p[1];
+    var th=(k+0.5)*Math.PI/7, c=Math.cos(th);
+    var xy=axisXY(k,side,LR);
+    var anchor=side==='sin'?'end':'start';
+    var blockH=sc?31:15;
+    var top=xy[1]-blockH/2-(blockH/2)*c;
+    var lg=sv('g',{'class':'lab'});
+    if(!sc){var dot=axisXY(k,side,R);lg.appendChild(sv('circle',{cx:dot[0].toFixed(1),cy:dot[1].toFixed(1),r:3.5,fill:side==='sin'?'var(--sin)':'var(--virtue)'}));}
+    var tn=sv('text',{x:xy[0].toFixed(1),y:(top+12).toFixed(1),'text-anchor':anchor,'class':'lab-name'});tn.textContent=DIMS[d].name;lg.appendChild(tn);
+    if(sc){var ts=sv('text',{x:xy[0].toFixed(1),y:(top+29).toFixed(1),'text-anchor':anchor,'class':'lab-score'});ts.textContent=fmt(sc[d]);lg.appendChild(ts);}
+    if(sc&&opts.onPick){lg.addEventListener('click',function(){opts.onPick(p[0]);});}
+    svg.appendChild(lg);
+  });});
+  if(sc){
+    PAIRS.forEach(function(p,k){['sin','virtue'].forEach(function(side){
+      var d=side==='sin'?p[0]:p[1];
+      var xy=axisXY(k,side,R*sc[d]/10);
+      var b=band(sc[d]);
+      var hit=sv('circle',{cx:xy[0].toFixed(1),cy:xy[1].toFixed(1),r:13,'class':'hit',tabindex:'0',role:'button','aria-label':DIMS[d].name+' '+fmt(sc[d])+' 分，'+BAND_ZH[b]+(prev?('，对比 '+fmt(prev[d])):'')+'。按回车查看解读'});
+      var showTip=function(){
+        var box=svg.getBoundingClientRect(),hb=host.getBoundingClientRect(),scale=box.width/360;
+        tip.textContent='';
+        var l1=el('div');l1.appendChild(el('span','tv',fmt(sc[d])));l1.appendChild(document.createTextNode(' '));l1.appendChild(el('span','tn',DIMS[d].name+'，'+BAND_ZH[b]));tip.appendChild(l1);
+        if(prev)tip.appendChild(el('div','tn','对比 '+fmt(prev[d])+'，变化 '+delta(sc[d],prev[d])));
+        tip.hidden=false;
+        var w=tip.offsetWidth,left=box.left-hb.left+(xy[0]+180)*scale;
+        left=Math.max(w/2+4,Math.min(hb.width-w/2-4,left));
+        tip.style.left=left+'px';tip.style.top=(box.top-hb.top+(xy[1]+172)*scale)+'px';
+      };
+      var hideTip=function(){tip.hidden=true;};
+      hit.addEventListener('pointerenter',showTip);
+      hit.addEventListener('pointerleave',hideTip);
+      hit.addEventListener('focus',showTip);
+      hit.addEventListener('blur',hideTip);
+      hit.addEventListener('click',function(e){e.stopPropagation();showTip();});
+      hit.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&opts.onPick){e.preventDefault();opts.onPick(p[0]);}});
+      svg.appendChild(hit);
+    });});
+  }
+  host.appendChild(svg);
+  if(tip)host.appendChild(tip);
+}
+
+/* ================= START ================= */
+var nick=$('nick');
+nick.value=store.get(LS_NICK,'')||'';
+function localHistory(){return store.get(LS_HIST,[]).map(function(x){return x&&x.ans&&x.sc?x:null;}).filter(Boolean);}
+function refreshStart(){
+  var prog=store.get(LS_PROG,null);
+  var rb=$('btn-resume');
+  if(prog&&prog.ans&&Object.keys(prog.ans).length>0&&prog.idx<ORDER.length){rb.hidden=false;rb.textContent='继续上次的作答（已答 '+Object.keys(prog.ans).length+' 题）';}
+  else rb.hidden=true;
+  var hist=localHistory();
+  var lb=$('btn-last');
+  if(hist.length){lb.hidden=false;lb.textContent='查看最近一次结果（'+dateShort(hist[hist.length-1].ts)+'）';}else lb.hidden=true;
+  $('store-note').hidden=store.ok;
+  drawWheel($('wheel-start'),null,null,{});
+}
+
+/* ================= QUIZ ================= */
+var st=null,busy=false;
+function newState(name){return {idx:0,ans:{},times:{},name:(name||'').trim().slice(0,20),started:Date.now()};}
+function saveProgress(){store.set(LS_PROG,{idx:st.idx,ans:st.ans,times:st.times,name:st.name,started:st.started});}
+function renderQ(){
+  var id=ORDER[st.idx],it=ITEMS[id],total=ORDER.length;
+  $('q-count').textContent='第 '+(st.idx+1)+' 题，共 '+total+' 题';
+  $('q-eta').textContent='还需约 '+Math.max(1,Math.ceil((total-st.idx)*8/60))+' 分钟';
+  $('q-bar').style.width=(st.idx/total*100)+'%';
+  $('q-bar-wrap').setAttribute('aria-valuenow',String(st.idx));
+  $('q-tag').hidden=!it.f;
+  $('q-ask').hidden=!it.f;
+  var sit=$('q-sit');
+  if(it.f){sit.hidden=true;$('q-react').textContent=it.q;}
+  else{sit.hidden=!it.s;sit.textContent=it.s||'';$('q-react').textContent=it.r;}
+  var box=$('q-opts');box.textContent='';
+  scaleOf(it).forEach(function(lab,i){
+    var b=el('button','opt');b.type='button';
+    b.setAttribute('aria-pressed',st.ans[id]===i+1?'true':'false');
+    b.appendChild(el('span','n',String(i+1)));
+    b.appendChild(el('span','l',lab));
+    b.addEventListener('click',function(){choose(i+1);});
+    box.appendChild(b);
+  });
+  $('btn-prev').textContent=st.idx===0?'返回首页':'上一题';
+  st.shownAt=performance.now();
+  try{$('q-react').focus({preventScroll:true});}catch(e){}
+  saveProgress();
+}
+function choose(v){
+  if(busy)return;busy=true;
+  var id=ORDER[st.idx];
+  st.times[id]=(st.times[id]||0)+Math.min(performance.now()-(st.shownAt||performance.now()),60000);
+  st.ans[id]=v;
+  var btns=$('q-opts').children;
+  for(var i=0;i<btns.length;i++)btns[i].setAttribute('aria-pressed',i===v-1?'true':'false');
+  saveProgress();
+  setTimeout(function(){busy=false;if(st.idx<ORDER.length-1){st.idx++;renderQ();}else finish();},230);
+}
+function prevQ(){
+  if(busy)return;
+  if(st.idx===0){saveProgress();refreshStart();show('start');return;}
+  st.idx--;renderQ();
+}
+document.addEventListener('keydown',function(e){
+  if(views.quiz.hidden)return;
+  var tag=(e.target&&e.target.tagName)||'';
+  if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA')return;
+  if(e.key>='1'&&e.key<='5'){e.preventDefault();choose(+e.key);}
+  else if(e.key==='Backspace'||e.key==='ArrowLeft'){e.preventDefault();prevQ();}
+});
+
+var sessionEntry=null;
+function finish(){
+  var avg=avgSecOf(st.times);
+  var entry={id:'r'+Date.now().toString(36),ts:Date.now(),name:st.name,ans:st.ans,sc:scoreAll(st.ans),q:qualityOf(st.ans,avg),src:'local'};
+  var hist=store.get(LS_HIST,[]);hist.push(entry);
+  if(hist.length>30)hist=hist.slice(hist.length-30);
+  store.set(LS_HIST,hist);
+  store.del(LS_PROG);
+  sessionEntry=entry;
+  showResult(entry,{animate:true});
+}
+
+/* ================= RESULT ================= */
+var current=null,cmpId=null;
+function selfPool(){var h=localHistory();if(sessionEntry&&!h.some(function(x){return x.id===sessionEntry.id;}))h.push(sessionEntry);return h;}
+function pool(){return selfPool();}
+function findIn(list,id){for(var i=0;i<list.length;i++)if(list[i].id===id)return list[i];return null;}
+function defaultCompare(entry){
+  var h=pool().filter(function(x){return x.id!==entry.id&&x.ts<entry.ts&&(x.name||'')===(entry.name||'');});
+  if(!h.length)h=pool().filter(function(x){return x.id!==entry.id&&x.ts<entry.ts;});
+  h.sort(function(a,b){return a.ts-b.ts;});
+  return h.length?h[h.length-1].id:null;
+}
+function showResult(entry,opts){
+  opts=opts||{};
+  current=entry;
+  cmpId=defaultCompare(entry);
+  show('result');
+  $('r-date').textContent=dateZh(entry.ts,true)+(entry.name?('，'+entry.name):'');
+  renderHigh(entry);renderQuality(entry);renderCompareSelect(entry);
+  renderChart(!!opts.animate);renderTable();renderPairs();renderAnswers(entry);
+  renderHistory();
+}
+
+
+function renderHigh(entry){
+  var box=$('r-high');box.textContent='';
+  [['sin','七宗罪中最突出'],['virtue','七美德中最突出']].forEach(function(x){
+    var t=topOf(entry.sc,x[0]),c=el('div','hl');
+    c.appendChild(el('p','k',x[1]));
+    var v=el('p','v');v.appendChild(el('span','dot '+x[0]));v.appendChild(el('span',null,topNames(t)));v.appendChild(el('span',null,fmt(t.score)));
+    c.appendChild(v);box.appendChild(c);
+  });
+}
+function renderQuality(entry){
+  var q=entry.q,ul=$('r-quality');ul.textContent='';
+  var row=function(ok,text,extra){var li=el('li',ok?'':'warn');li.appendChild(el('span','ic',ok?'✓':'!'));var d=el('div');d.appendChild(el('p',null,text));if(extra)d.appendChild(extra);li.appendChild(d);ul.appendChild(li);};
+  var n=q.inc.length,extra=null;
+  if(n){
+    extra=el('details');extra.appendChild(el('summary',null,'看是哪几题'));
+    var ol=el('ul','pairlist');
+    q.inc.forEach(function(i){ol.appendChild(el('li',null,'「'+itemText(ITEMS[CONSIST[i][0]])+'」和「'+itemText(ITEMS[CONSIST[i][1]])+'」两题都选了偏高的答案'));});
+    extra.appendChild(ol);
+  }
+  row(n<=1,n===0?'6 对正反题的答案前后一致':(n===1?'有 1 对正反题的答案矛盾，影响不大':'有 '+n+' 对正反题的答案矛盾，结果可能不够稳定'),extra);
+  var k=q.ideal;
+  row(k<=1,k<=1?'没有明显的美化倾向':(k===2?'有一点理想化：4 题「几乎没人做得到」的题里，有 2 题选了「像」':'明显理想化：4 题「几乎没人做得到」的题里，有 '+k+' 题选了「像」。七美德的分数可能偏高，七宗罪的分数可能偏低'));
+  if(!q.avg){row(true,'没有作答用时的记录');}
+  else{var fast=q.avg<2;row(!fast,fast?('作答很快，平均每题 '+q.avg.toFixed(1)+' 秒，可能没有仔细读题'):('作答用时约 '+Math.max(1,Math.round(q.totalMin))+' 分钟，平均每题 '+q.avg.toFixed(1)+' 秒'));}
+}
+function entryLabel(x){return dateShort(x.ts)+(x.name?('，'+x.name):'');}
+function renderCompareSelect(entry){
+  var others=pool().filter(function(x){return x.id!==entry.id;}).sort(function(a,b){return b.ts-a.ts;});
+  var wrap=$('r-cmp-wrap'),sel=$('r-cmp');sel.textContent='';
+  if(!others.length){wrap.hidden=true;return;}
+  wrap.hidden=false;
+  var none=el('option',null,'不对比');none.value='';sel.appendChild(none);
+  others.forEach(function(x){var o=el('option',null,entryLabel(x));o.value=x.id;sel.appendChild(o);});
+  sel.value=cmpId||'';
+}
+$('r-cmp').addEventListener('change',function(){cmpId=this.value||null;renderChart(false);renderTable();renderPairs();});
+function cmpEntry(){return cmpId?findIn(pool(),cmpId):null;}
+function pickPair(sinKey){var a=$('pair-'+sinKey);if(!a)return;a.scrollIntoView({behavior:prefersReduced()?'auto':'smooth',block:'start'});a.classList.remove('flash');void a.offsetWidth;a.classList.add('flash');}
+function renderChart(animate){
+  var c=cmpEntry();
+  drawWheel($('wheel-result'),current.sc,c?c.sc:null,{animate:animate&&!prefersReduced(),onPick:pickPair});
+  var lg=$('r-legend');lg.textContent='';
+  var a=el('li');a.appendChild(el('span','sw-dot sin'));a.appendChild(document.createTextNode('七宗罪'));lg.appendChild(a);
+  var b=el('li');b.appendChild(el('span','sw-dot virtue'));b.appendChild(document.createTextNode('七美德'));lg.appendChild(b);
+  if(c){var p=el('li');p.appendChild(el('span','sw-line'));p.appendChild(document.createTextNode('对比：'+entryLabel(c)));lg.appendChild(p);}
+}
+function renderTable(){
+  var t=$('r-table');t.textContent='';
+  var c=cmpEntry(),sc=current.sc;
+  var thead=el('thead'),tr=el('tr');
+  ['七宗罪','分数','七美德','分数'].forEach(function(h){var th=el('th',null,h);th.scope='col';tr.appendChild(th);});
+  thead.appendChild(tr);t.appendChild(thead);
+  var tb=el('tbody');
+  var cell=function(d){var td=el('td','s',fmt(sc[d]));if(c)td.appendChild(el('small',null,delta(sc[d],c.sc[d])));return td;};
+  var name=function(d){var td=el('td','n');td.appendChild(el('span','dot '+DIMS[d].side));td.appendChild(document.createTextNode(DIMS[d].name));return td;};
+  PAIRS.forEach(function(p){var r=el('tr');r.appendChild(name(p[0]));r.appendChild(cell(p[0]));r.appendChild(name(p[1]));r.appendChild(cell(p[1]));tb.appendChild(r);});
+  var avg=function(side,s){var sum=0;PAIRS.forEach(function(p){sum+=s[side==='sin'?p[0]:p[1]];});return sum/7;};
+  var ra=el('tr','avg');
+  ra.appendChild(el('td','n','平均'));
+  var a1=el('td','s',fmt(avg('sin',sc)));if(c)a1.appendChild(el('small',null,delta(avg('sin',sc),avg('sin',c.sc))));ra.appendChild(a1);
+  ra.appendChild(el('td','n','平均'));
+  var a2=el('td','s',fmt(avg('virtue',sc)));if(c)a2.appendChild(el('small',null,delta(avg('virtue',sc),avg('virtue',c.sc))));ra.appendChild(a2);
+  tb.appendChild(ra);t.appendChild(tb);
+  if(c)t.appendChild(el('caption',null,'小字是和「'+entryLabel(c)+'」相比的变化'));
+}
+function renderPairs(){
+  var box=$('r-pairs');box.textContent='';
+  var c=cmpEntry(),sc=current.sc;
+  PAIRS.forEach(function(p){
+    var s=p[0],v=p[1];
+    var art=el('article','pair');art.id='pair-'+s;
+    var head=el('header','pair-head');
+    head.appendChild(el('h3',null,DIMS[s].name+'与'+DIMS[v].name));
+    var ps=el('p','pair-scores');
+    [s,v].forEach(function(d){var sp=el('span');sp.appendChild(el('span','dot '+DIMS[d].side));sp.appendChild(document.createTextNode(DIMS[d].name));sp.appendChild(el('b',null,fmt(sc[d])));ps.appendChild(sp);});
+    head.appendChild(ps);art.appendChild(head);
+    var cb=COMBOS[s][comboKey(sc[s],sc[v])];
+    var combo=el('div','combo');combo.appendChild(el('p','combo-name',cb[0]));combo.appendChild(el('p',null,cb[1]));art.appendChild(combo);
+    [s,v].forEach(function(d){
+      var D=DIMS[d],b=band(sc[d]),ent=el('div','dim-entry');
+      var h=el('h4');h.appendChild(el('span','dot '+D.side));h.appendChild(document.createTextNode(D.name));h.appendChild(el('b',null,fmt(sc[d])));h.appendChild(el('span','band',BAND_ZH[b]));
+      if(c)h.appendChild(el('span','delta','对比 '+delta(sc[d],c.sc[d])));
+      ent.appendChild(h);
+      ent.appendChild(el('p','desc',D.band[b]));
+      ent.appendChild(el('p','tip','建议：'+D.tip[b]));
+      ent.appendChild(el('p','concept',D.concept));
+      ent.appendChild(el('p','basis','依据：'+D.basis));
+      art.appendChild(ent);
+    });
+    box.appendChild(art);
+  });
+}
+function renderAnswers(entry){
+  var box=$('r-answers');box.textContent='';
+  var group=function(d,title,side){
+    var g=el('div','ans-group');
+    var h=el('h4');if(side)h.appendChild(el('span','dot '+side));h.appendChild(document.createTextNode(title));g.appendChild(h);
+    var ul=el('ul','ans-list');
+    var ids=d==='id'?IDEAL:[1,2,3,4,5].map(function(k){return d+k;});
+    ids.forEach(function(id){
+      var it=ITEMS[id],li=el('li');
+      li.appendChild(el('p','aq',itemText(it)));
+      var a=el('p','aa','答案：');a.appendChild(el('span',null,scaleOf(it)[entry.ans[id]-1]||'—'));li.appendChild(a);
+      if(SRC[id])li.appendChild(el('p','as','依据：'+SRC[id]));
+      ul.appendChild(li);
+    });
+    g.appendChild(ul);box.appendChild(g);
+  };
+  PAIRS.forEach(function(p){group(p[0],DIMS[p[0]].name+' '+fmt(entry.sc[p[0]])+' 分','sin');group(p[1],DIMS[p[1]].name+' '+fmt(entry.sc[p[1]])+' 分','virtue');});
+  group('id','美化检查题（不计入分数）',null);
+}
+function renderHistory(){
+  var box=$('r-history');box.textContent='';
+  if(!store.ok){box.appendChild(el('p','empty','这个浏览器无法保存记录：关闭页面后，这次的结果会消失。'));return;}
+  var h=selfPool().slice().sort(function(a,b){return b.ts-a.ts;});
+  if(!h.length){box.appendChild(el('p','empty','还没有记录。'));return;}
+  var ul=el('ul','hist');
+  h.forEach(function(x){
+    var li=el('li'),info=el('div'),line=el('p');
+    line.appendChild(el('span','hd',dateShort(x.ts)));if(x.name)line.appendChild(el('span','hn',x.name));if(current&&x.id===current.id)line.appendChild(el('span','cur','正在看'));
+    info.appendChild(line);
+    info.appendChild(el('p','hs','最突出：'+topNames(topOf(x.sc,'sin'))+' '+fmt(topOf(x.sc,'sin').score)+'，'+topNames(topOf(x.sc,'virtue'))+' '+fmt(topOf(x.sc,'virtue').score)));
+    li.appendChild(info);
+    var act=el('div','ha');
+    if(!(current&&x.id===current.id)){var vb=el('button','btn small','查看');vb.type='button';vb.addEventListener('click',function(){showResult(x,{});});act.appendChild(vb);}
+    var db=el('button','btn small','删除');db.type='button';
+    armDelete(db,function(){
+      store.set(LS_HIST,store.get(LS_HIST,[]).filter(function(y){return y.id!==x.id;}));
+      if(sessionEntry&&sessionEntry.id===x.id)sessionEntry=null;
+      if(cmpId===x.id)cmpId=null;
+      if(current&&x.id===current.id){var left=selfPool();if(left.length)showResult(left[left.length-1],{});else{current=null;refreshStart();show('start');}}
+      else{renderCompareSelect(current);renderChart(false);renderTable();renderPairs();renderHistory();}
+    });
+    act.appendChild(db);li.appendChild(act);ul.appendChild(li);
+  });
+  box.appendChild(ul);
+}
+function armDelete(btn,onConfirm){
+  var armed=null;
+  btn.addEventListener('click',function(){
+    if(!armed){btn.textContent='确认删除';btn.classList.add('danger-armed');armed=setTimeout(function(){armed=null;btn.textContent='删除';btn.classList.remove('danger-armed');},4000);return;}
+    clearTimeout(armed);armed=null;onConfirm();
+  });
+}
+$('btn-copy').addEventListener('click',function(){
+  var sc=current.sc;
+  var lines=['七宗罪 × 七美德（'+dateZh(current.ts,false)+(current.name?('，'+current.name):'')+'）'];
+  PAIRS.forEach(function(p){lines.push(DIMS[p[0]].name+' '+fmt(sc[p[0]])+'｜'+DIMS[p[1]].name+' '+fmt(sc[p[1]])+'（'+COMBOS[p[0]][comboKey(sc[p[0]],sc[p[1]])][0]+'）');});
+  copyText(lines.join('\n'),$('copy-msg'),$('copy-fallback'));
+});
+
+/* ================= BUTTONS ================= */
+$('btn-start').addEventListener('click',function(){
+  var name=(nick.value||'').trim().slice(0,20);
+  store.set(LS_NICK,name);st=newState(name);show('quiz');renderQ();
+});
+$('btn-resume').addEventListener('click',function(){var p=store.get(LS_PROG,null);if(!p){refreshStart();return;}st={idx:Math.min(p.idx||0,ORDER.length-1),ans:p.ans||{},times:p.times||{},name:p.name||'',started:p.started||Date.now()};show('quiz');renderQ();});
+$('btn-last').addEventListener('click',function(){var h=localHistory();if(h.length)showResult(h[h.length-1],{animate:true});});
+$('btn-prev').addEventListener('click',prevQ);
+$('btn-again').addEventListener('click',function(){var name=(current&&current.name)||(nick.value||'').trim();st=newState(name);show('quiz');renderQ();});
+$('btn-home').addEventListener('click',function(){refreshStart();show('start');});
+
+refreshStart();
+show('start');
+window.__sv14={ITEMS:ITEMS,ORDER:ORDER,DIMS:DIMS,SRC:SRC,PAIRS:PAIRS,COMBOS:COMBOS,CONSIST:CONSIST,scoreAll:scoreAll,qualityOf:qualityOf,comboKey:comboKey,band:band};
+})();
+</script>
+</body>
+</html>
